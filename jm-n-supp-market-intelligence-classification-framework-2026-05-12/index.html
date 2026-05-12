@@ -1,13 +1,468 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>JM&N Classification Framework (Supplement)</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Intelligence Classification Framework</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --serif: 'DM Serif Display', Georgia, serif;
+    --sans: 'Instrument Sans', system-ui, sans-serif;
+    --mono: 'DM Mono', 'Courier New', monospace;
+    --ink: #1a1a18;
+    --muted: #6b6b66;
+    --rule: #e0dfd8;
+    --surface: #f5f4f0;
+    --white: #ffffff;
+    --blue-bg: #E6F1FB;
+    --blue-bd: #85B7EB;
+    --blue-tx: #0C447C;
+    --green-bg: #E1F5EE;
+    --green-bd: #5DCAA5;
+    --green-tx: #085041;
+  }
+
+  body {
+    font-family: var(--sans);
+    background: var(--white);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 3.5rem 3rem 4rem;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.55rem;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-size: 34px;
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 0.5rem;
+    color: var(--ink);
+  }
+
+  .subtitle {
+    font-size: 14.5px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    max-width: 560px;
+  }
+
+  hr {
+    border: none;
+    border-top: 0.5px solid var(--rule);
+    margin-bottom: 1.75rem;
+  }
+
+  .meta {
+    display: flex;
+    gap: 2.25rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .meta-item label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 3px;
+  }
+
+  .meta-item span {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .section {
+    margin-bottom: 1.75rem;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+  }
+
+  .body-text {
+    font-size: 13.5px;
+    line-height: 1.8;
+    color: var(--ink);
+  }
+
+  .body-text + .body-text {
+    margin-top: 0.9rem;
+  }
+
+  /* GTE Table */
+  .gte-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.25rem 0;
+    font-size: 13px;
+  }
+
+  .gte-table th {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: 0 1rem 0.5rem 0;
+    border-bottom: 0.5px solid var(--rule);
+    font-weight: 400;
+  }
+
+  .gte-table td {
+    padding: 0.65rem 1rem 0.65rem 0;
+    border-bottom: 0.5px solid var(--rule);
+    vertical-align: middle;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .gte-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .gte-table .field-name {
+    font-weight: 500;
+    color: var(--ink);
+    white-space: nowrap;
+    width: 150px;
+  }
+
+  .gte-table .field-question {
+    color: var(--muted);
+    font-size: 12.5px;
+  }
+
+  .tag-pill {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-right: 4px;
+  }
+
+  .tag-neutral {
+    background: var(--white);
+    border: 0.5px solid var(--rule);
+    color: var(--ink);
+  }
+
+  .tag-blue {
+    background: var(--blue-bg);
+    border: 0.5px solid var(--blue-bd);
+    color: var(--blue-tx);
+  }
+
+  .tag-green {
+    background: var(--green-bg);
+    border: 0.5px solid var(--green-bd);
+    color: var(--green-tx);
+  }
+
+  /* Architecture cards */
+  .arch-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 0.75rem;
+  }
+
+  .arch-card {
+    background: var(--surface);
+    border-radius: 8px;
+    border: 0.5px solid var(--rule);
+    padding: 0.9rem 1rem;
+  }
+
+  .arch-card .card-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 5px;
+    letter-spacing: 0.03em;
+  }
+
+  .arch-card .card-question {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+
+  .arch-card .card-body {
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+
+  /* Principles */
+  .principle {
+    border-left: 2px solid var(--rule);
+    padding: 0.4rem 0 0.4rem 1rem;
+    margin-bottom: 1.1rem;
+  }
+
+  .principle:last-child {
+    margin-bottom: 0;
+  }
+
+  .principle .p-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .principle .p-body {
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--ink);
+  }
+
+  .principle .p-example {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  /* Tag reference */
+  .tag-group {
+    margin-bottom: 1rem;
+  }
+
+  .tag-group:last-child {
+    margin-bottom: 0;
+  }
+
+  .tag-group-label {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.45rem;
+  }
+
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 2.5rem;
+    padding-top: 1.25rem;
+    border-top: 0.5px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .footer-name {
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--ink);
+  }
+
+  .footer-link {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  @media print {
+    body { background: white; }
+    .page { padding: 2rem 2.5rem; }
+    @page { size: letter; margin: 0.5in; }
+  }
+</style>
 </head>
 <body>
+<div class="page">
 
-  <h1>Classification Framework (Supplement)</h1>
+  <p class="eyebrow">Portfolio Supplement — 2025</p>
+  <h1>Market Intelligence Classification Framework</h1>
+  <p class="subtitle">A classification framework for structuring competitive intelligence: design decisions, core distinctions, and the reasoning behind them.</p>
 
-  <p>This is a supplemental deep dive supporting the Market Intelligence Pipeline case study.</p>
+  <hr>
 
+  <div class="meta">
+    <div class="meta-item"><label>Scope</label><span>37 tags across 10 groups</span></div>
+    <div class="meta-item"><label>Objects classified</label><span>Companies, Articles, People</span></div>
+    <div class="meta-item"><label>Applied in</label><span>Market Intelligence Pipeline</span></div>
+  </div>
+
+  <div class="section">
+    <p class="section-label">Background</p>
+    <p class="body-text">Classification systems fail at the edges. The easy cases tag cleanly: a bank, a SaaS company, a VC fund. The hard cases reveal whether the system was designed to think or just to sort.</p>
+    <p class="body-text">The edge case that shaped this taxonomy was my own company. Green Think Energy (GTE) delivered solar permit plan sets. Customers experienced it as a professional service governed by SLAs supporting tight turnaround times. Internally, it ran as a technology-enabled production operation supported by custom databases, clearly defined inputs, and standardized outputs. One tag could not hold both descriptions without losing something true.</p>
+    <p class="body-text">The solution was splitting the question in two. Market Position and Operating Model became separate fields. What a customer buys and how a company actually delivers value are not the same question, and collapsing them into one answer produces a classification that is accurate about neither.</p>
+  </div>
+
+  <div class="section">
+    <p class="section-label">The core distinction: Green Think Energy</p>
+
+    <table class="gte-table">
+      <thead>
+        <tr>
+          <th>Field</th>
+          <th>Question answered</th>
+          <th>Green Think Energy</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="field-name">Market Position</td>
+          <td class="field-question">What does the customer buy?</td>
+          <td><span class="tag-pill tag-neutral">Professional Services</span></td>
+        </tr>
+        <tr>
+          <td class="field-name">Operating Model</td>
+          <td class="field-question">How is value actually delivered?</td>
+          <td><span class="tag-pill tag-neutral">Tech-enabled Services</span></td>
+        </tr>
+        <tr>
+          <td class="field-name">Vertical</td>
+          <td class="field-question">What industry does it serve?</td>
+          <td><span class="tag-pill tag-neutral">Energy</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="body-text">A company marketing itself as a service business and a company running a production operation are different things. In the case of GTE, both were true simultaneously, on different sides of the same transaction. The taxonomy holds that distinction rather than forcing a choice.</p>
+  </div>
+
+  <div class="section">
+    <p class="section-label">Classification architecture</p>
+    <div class="arch-grid">
+      <div class="arch-card">
+        <p class="card-title">Market Position</p>
+        <p class="card-question">What does the customer see and buy?</p>
+        <p class="card-body">The market-facing product or service. How the company is perceived and positioned externally.</p>
+      </div>
+      <div class="arch-card">
+        <p class="card-title">Operating Model</p>
+        <p class="card-question">How is value created and delivered?</p>
+        <p class="card-body">The internal delivery mechanism. May match Market Position or diverge significantly from it.</p>
+      </div>
+      <div class="arch-card">
+        <p class="card-title">Vertical</p>
+        <p class="card-question">What industry does it serve?</p>
+        <p class="card-body">The sector the company operates within. Separate from what it sells or how it delivers.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <p class="section-label">Design principles</p>
+
+    <div class="principle">
+      <p class="p-title">AI-powered is a modifier, never a primary tag</p>
+      <p class="p-body">AI-powered must always be paired with a primary classification. It describes how something is built, not what it is. A company cannot be classified as AI-powered alone any more than a restaurant can be classified as "gas-fired."</p>
+      <p class="p-example">Correct: AI Platform / Tooling + AI-powered &nbsp;&nbsp; Incorrect: AI-powered alone</p>
+    </div>
+
+    <div class="principle">
+      <p class="p-title">Null is a valid output</p>
+      <p class="p-body">If an article provides insufficient information to classify a field with confidence, the field is left null. Guessing produces noise that compounds across every downstream query. A structured blank is more useful than a confident error.</p>
+      <p class="p-example">Applied to: Operating Model, Vertical, Business Line when article evidence is insufficient</p>
+    </div>
+
+    <div class="principle">
+      <p class="p-title">Native vs. General in Vertical</p>
+      <p class="p-body">General means a company serves all industries with no dominant sector. Native means the company constitutes the industry itself rather than serving it. Visa is Native to Finance because Visa is financial infrastructure. Salesforce is General because it serves every sector. The distinction matters for how a market position is actually interpreted.</p>
+      <p class="p-example">Native: Visa, Mastercard &nbsp;&nbsp; General: Salesforce, AWS</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <p class="section-label">Tag reference (selected)</p>
+
+    <div class="tag-group">
+      <p class="tag-group-label">AI and technology</p>
+      <div class="tag-row">
+        <span class="tag-pill tag-blue">SaaS</span>
+        <span class="tag-pill tag-blue">AI Platform / Tooling</span>
+        <span class="tag-pill tag-blue">AI Infrastructure</span>
+        <span class="tag-pill tag-blue">AI-powered</span>
+        <span class="tag-pill tag-blue">PaaS / Dev Tools</span>
+        <span class="tag-pill tag-blue">API &amp; Developer Platform</span>
+      </div>
+    </div>
+
+    <div class="tag-group">
+      <p class="tag-group-label">Services and delivery</p>
+      <div class="tag-row">
+        <span class="tag-pill tag-green">Professional Services</span>
+        <span class="tag-pill tag-green">Tech-enabled Services</span>
+        <span class="tag-pill tag-green">Managed Services / MSP</span>
+        <span class="tag-pill tag-green">BPO / Outsourcing</span>
+        <span class="tag-pill tag-green">Systems Integrator</span>
+      </div>
+    </div>
+
+    <div class="tag-group">
+      <p class="tag-group-label">Financial and investment</p>
+      <div class="tag-row">
+        <span class="tag-pill tag-neutral">Venture Capital / Private Equity</span>
+        <span class="tag-pill tag-neutral">Banking / Neobanking</span>
+        <span class="tag-pill tag-neutral">Insurance</span>
+        <span class="tag-pill tag-neutral">Payments Network</span>
+      </div>
+    </div>
+
+    <div class="tag-group">
+      <p class="tag-group-label">Vertical (industry served)</p>
+      <div class="tag-row">
+        <span class="tag-pill tag-neutral">Healthcare</span>
+        <span class="tag-pill tag-neutral">Energy</span>
+        <span class="tag-pill tag-neutral">Life Sciences</span>
+        <span class="tag-pill tag-neutral">Finance</span>
+        <span class="tag-pill tag-neutral">General</span>
+        <span class="tag-pill tag-neutral">Native</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="footer-name">Cyrus Garcia, Strategy &amp; Operations</span>
+    <a class="footer-link" href="https://www.linkedin.com/in/cyrus-garcia-631054138">linkedin.com/in/cyrus-garcia-631054138</a>
+  </div>
+
+</div>
 </body>
 </html>
